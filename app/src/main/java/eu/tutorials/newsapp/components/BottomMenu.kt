@@ -13,19 +13,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import eu.tutorials.newsapp.BottomMenuScreen
 import eu.tutorials.newsapp.R
 
-//Todo 5: create a component package and create a file with composable for BottomMenu
 @Composable
 fun BottomMenu(navController:NavController) {
-    //Todo 6: create a list for the menu items using the BottomMenuScreen sealed class
     val menuItems = listOf(
         BottomMenuScreen.TopNews,
         BottomMenuScreen.Categories,
         BottomMenuScreen.Sources
     )
-    //Todo 7: Add th BottomNavigation, loop through each item and set to bottom navigation item
-    BottomNavigation(contentColor = colorResource(id = R.color.white))
+   BottomNavigation(contentColor = colorResource(id = R.color.white))
     {
-        //Todo 14: get the destination route via the nav back stack entry and set icon color when an item is selected
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         menuItems.forEach {

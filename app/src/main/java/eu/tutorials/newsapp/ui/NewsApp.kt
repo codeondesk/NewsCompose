@@ -20,17 +20,15 @@ import eu.tutorials.newsapp.ui.screen.TopNews
 fun NewsApp() {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
-    //Todo 8: set MainScreen in the NewsApp
- MainScreen(navController = navController,scrollState)
+
+    MainScreen(navController = navController,scrollState)
 }
 
-//Todo 1: create a mainScreen composable
 @Composable
 fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
     Scaffold(bottomBar ={
         BottomMenu(navController = navController)
     }) {
-        //Todo 9: set Navigation in the MainScreen
         Navigation(navController =navController , scrollState =scrollState )
     }
 }
@@ -39,8 +37,7 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
 @Composable
 fun Navigation(navController:NavHostController,scrollState: ScrollState) {
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route) {
-       //Todo 13: Add the bottom navigation to the Navigation graph
-        bottomNavigation(navController = navController)
+       bottomNavigation(navController = navController)
         composable("Detail/{newsId}",
             arguments = listOf(
                 navArgument("newsId") { type = NavType.IntType }
@@ -52,7 +49,6 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState) {
     }
 }
 
-//Todo 12: create bottom navigation function for the three options
 fun NavGraphBuilder.bottomNavigation(navController: NavController) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNews(navController = navController)
