@@ -31,7 +31,8 @@ fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
             items(articles.size){index->
                 //Todo 5: update newsData with article from each index
                 TopNewsItem(article =articles[index],
-                onNewsClick = {  navController.navigate("Detail/${""}")}
+                    //Todo 11 :we pass in index when a news item is clicked
+                onNewsClick = {  navController.navigate("Detail/$index")}
                     )
             }
         }

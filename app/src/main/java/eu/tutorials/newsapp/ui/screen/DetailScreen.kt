@@ -1,6 +1,5 @@
 package eu.tutorials.newsapp.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,21 +12,28 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.skydoves.landscapist.coil.CoilImage
 import eu.tutorials.newsapp.MockData
 import eu.tutorials.newsapp.MockData.getTimeAgo
-import eu.tutorials.newsapp.NewsData
 import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.network.models.TopNewsArticle
 
+/**Todo 13: replace newsData with topNewsArticle and also replace the element values with data from it
+ * Replace Image with CoilImage
+ * For each Text we use elvis operator ?: to set the the value if its not null else set Not Available
+ */
 @Composable
-fun DetailScreen(newsData: NewsData, scrollState: ScrollState,navController: NavController) {
+fun DetailScreen(article: TopNewsArticle, scrollState: ScrollState,navController: NavController) {
     Scaffold(topBar = {
         DetailTopAppBar(onBackPressed = {navController.popBackStack()})
     }) {
@@ -39,17 +45,24 @@ fun DetailScreen(newsData: NewsData, scrollState: ScrollState,navController: Nav
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Image(painter = painterResource(id = newsData.image), contentDescription = "")
+            CoilImage(
+                imageModel = article.urlToImage,
+                // Crop, Fit, Inside, FillHeight, FillWidth, None
+                contentScale = ContentScale.Crop,
+                error = ImageBitmap.imageResource(R.drawable.breaking_news),
+                // shows a placeholder ImageBitmap when loading.
+                placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                InfoWithIcon(Icons.Default.Edit, info = newsData.author)
-                InfoWithIcon(icon = Icons.Default.DateRange, info = MockData.stringToDate(newsData.publishedAt).getTimeAgo())
+                InfoWithIcon(Icons.Default.Edit, info = article.author?:"Not Available")
+                InfoWithIcon(icon = Icons.Default.DateRange, info = MockData.stringToDate(article.publishedAt!!).getTimeAgo())
             }
-            Text(text = newsData.title, fontWeight = FontWeight.Bold)
-            Text(text = newsData.description, modifier = Modifier.padding(top = 16.dp))
+            Text(text = article.title?:"Not Available", fontWeight = FontWeight.Bold)
+            Text(text = article.description?:"Not Available", modifier = Modifier.padding(top = 16.dp))
         }
     }
 }
@@ -79,12 +92,12 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
     }
 }
 
+//Todo 14: replace the preview data with TopNewsArticle
 @Preview(showBackground = true)
 @Composable
 fun DetailScreenPreview() {
     DetailScreen(
-        NewsData(
-            2,
+        TopNewsArticle(
             author = "Namita Singh",
             title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
             description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",

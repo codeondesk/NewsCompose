@@ -40,7 +40,7 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
     }
 }
 
-//Todo 9: create a padding value varaiable and pass into NavHost modifier
+//Todo 9: create a padding value variable and pass into NavHost modifier
 @Composable
 fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager(),paddingValues: PaddingValues) {
 
@@ -50,13 +50,16 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
         //Todo 7:pass articles to bottomNavigation
         bottomNavigation(navController = navController, articles)
-        composable("Detail/{newsId}",
+        //Todo 12: replace the key with index and get article by selected index
+        composable("Detail/{index}",
             arguments = listOf(
-                navArgument("newsId") { type = NavType.IntType }
+                navArgument("index") { type = NavType.IntType }
             )) { navBackStackEntry ->
-            val id = navBackStackEntry.arguments?.getInt("newsId")
-            val newsData = MockData.getNews(id)
-            DetailScreen(newsData, scrollState, navController)
+            val index = navBackStackEntry.arguments?.getInt("index")
+            index?.let {
+                val article = articles[index]
+                DetailScreen(article, scrollState, navController)
+            }
         }
     }
     }
