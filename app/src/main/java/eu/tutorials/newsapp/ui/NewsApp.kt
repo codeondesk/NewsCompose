@@ -2,9 +2,12 @@ package eu.tutorials.newsapp.ui
 
 import android.util.Log
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,17 +35,19 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
     Scaffold(bottomBar ={
         BottomMenu(navController = navController)
     }) {
-        Navigation(navController =navController , scrollState =scrollState )
+        //Todo 10: use the padding value from scaffold as a value in NavHost
+        Navigation(navController =navController , scrollState =scrollState,paddingValues = it )
     }
 }
 
+//Todo 9: create a padding value varaiable and pass into NavHost modifier
 @Composable
-fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager()) {
+fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager(),paddingValues: PaddingValues) {
 
     val articles = newsManager.newsResponse.value.articles
     Log.d("newss","$articles")
     articles?.let {
-    NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route) {
+    NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
         //Todo 7:pass articles to bottomNavigation
         bottomNavigation(navController = navController, articles)
         composable("Detail/{newsId}",

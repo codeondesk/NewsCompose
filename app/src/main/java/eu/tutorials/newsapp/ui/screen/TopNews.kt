@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -49,6 +50,7 @@ fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
             imageModel = article.urlToImage,
             // Crop, Fit, Inside, FillHeight, FillWidth, None
             contentScale = ContentScale.Crop,
+            error = ImageBitmap.imageResource(R.drawable.breaking_news),
             // shows a placeholder ImageBitmap when loading.
             placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
         )
@@ -61,7 +63,11 @@ fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(100.dp))
-            Text(text = article.title!!, color = Color.White, fontWeight = FontWeight.SemiBold)
+            //Todo 8: add maxline ellipsis when there is an overflow
+            Text(text = article.title!!, color = Color.White, fontWeight = FontWeight.SemiBold,
+            maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }}
 }
 
