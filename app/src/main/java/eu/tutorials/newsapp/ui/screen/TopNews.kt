@@ -45,7 +45,7 @@ fun TopNewsItem(newsData: NewsData,onNewsClick: () -> Unit = {},) {
         .padding(8.dp).clickable {
           onNewsClick()
         }) {
-        Image(painter = painterResource(id = newsData.image), contentDescription ="",contentScale = ContentScale.FillBounds)
+        Image(painter = painterResource(id = newsData.image), contentDescription ="",contentScale = ContentScale.Crop)
         Column(modifier = Modifier
             .wrapContentHeight()
             .padding(top = 16.dp, start = 16.dp),verticalArrangement = Arrangement.SpaceBetween) {
