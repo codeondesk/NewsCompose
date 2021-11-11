@@ -1,8 +1,10 @@
 package eu.tutorials.newsapp.network
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import eu.tutorials.newsapp.network.models.TopNewsResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -11,11 +13,13 @@ import retrofit2.Response
 //Todo 11: create the NewsManager class
 class NewsManager {
 
-    //Todo 12: create setter and getter variable to hold the response
+    //Todo 12: create setter and composable getter variable to hold the response
     private val _newsResponse =
         mutableStateOf(TopNewsResponse())
     val newsResponse: State<TopNewsResponse>
-        get() = _newsResponse
+        @Composable get() = remember {
+            _newsResponse
+        }
 
 
     //Todo 14: call the method in the init block so it gets triggered once the class is initialized
@@ -25,7 +29,7 @@ class NewsManager {
 
     /**Todo 13: create a method and process the request
      * In getTopArticles we pass in the country and apiKey parameter
-     * we use enqueu method to asynchronously process the request
+     * we use enqueue method to asynchronously process the request
      * if the response is successful we hold the value else we log the error
      * if there is a failure we log the trace to see what can be the cause
      */

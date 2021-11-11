@@ -50,6 +50,11 @@ android {
 dependencies {
     //Todo 1: add retrofit dependency
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    //Todo 17 add moshi converter
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
     implementation 'androidx.core:core-ktx:1.7.0'
