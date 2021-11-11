@@ -1,4 +1,5 @@
-package eu.tutorials.newsapp.network
+package eu.tutorials.newsapp.network.models
+
 
 //Todo 3: create top news article model
 data class TopNewsArticle(
