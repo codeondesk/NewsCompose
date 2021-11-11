@@ -1,5 +1,6 @@
 package eu.tutorials.newsapp.ui
 
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
@@ -11,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import eu.tutorials.newsapp.BottomMenuScreen
 import eu.tutorials.newsapp.MockData
 import eu.tutorials.newsapp.components.BottomMenu
+import eu.tutorials.newsapp.network.NewsManager
 import eu.tutorials.newsapp.ui.screen.Categories
 import eu.tutorials.newsapp.ui.screen.DetailScreen
 import eu.tutorials.newsapp.ui.screen.Sources
@@ -33,9 +35,14 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
     }
 }
 
-
+/** Todo 14:initialize news manager in the Navigation composable so every other
+ * composable can have access to it without it been initialized twice
+ */
 @Composable
-fun Navigation(navController:NavHostController,scrollState: ScrollState) {
+fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager()) {
+    //Todo 15 we get the article and print on the log
+    val articles = newsManager.newsResponse.value.articles
+    Log.d("newss","$articles")
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route) {
        bottomNavigation(navController = navController)
         composable("Detail/{newsId}",
