@@ -1,7 +1,6 @@
 package eu.tutorials.newsapp.network.models
 
 
-//Todo 3: create top news article model
 data class TopNewsArticle(
     val source : Source? = null,
     val author : String? = null,

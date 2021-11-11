@@ -10,10 +10,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-//Todo 11: create the NewsManager class
 class NewsManager {
 
-    //Todo 12: create setter and composable getter variable to hold the response
     private val _newsResponse =
         mutableStateOf(TopNewsResponse())
     val newsResponse: State<TopNewsResponse>
@@ -21,18 +19,10 @@ class NewsManager {
             _newsResponse
         }
 
-
-    //Todo 14: call the method in the init block so it gets triggered once the class is initialized
     init {
         getArticles()
     }
 
-    /**Todo 13: create a method and process the request
-     * In getTopArticles we pass in the country and apiKey parameter
-     * we use enqueue method to asynchronously process the request
-     * if the response is successful we hold the value else we log the error
-     * if there is a failure we log the trace to see what can be the cause
-     */
     private fun getArticles(){
         val service = Api.retrofitService.getTopArticles("us","d2691289ff474bb9850b71fa026ce470")
         service.enqueue(object : Callback<TopNewsResponse> {
