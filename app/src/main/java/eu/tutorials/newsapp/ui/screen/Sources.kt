@@ -88,15 +88,32 @@ fun SourceContent(articles:List<TopNewsArticle>) {
                 Column(modifier = Modifier
                     .height(200.dp)
                     .padding(end = 8.dp, start = 8.dp),verticalArrangement = Arrangement.SpaceEvenly) {
-                    Text(text = article.title ?: "Not Available",fontWeight = FontWeight.Bold,maxLines = 2,overflow = TextOverflow.Ellipsis)
-                    Text(text = article.description ?: "Not Available",maxLines = 3,overflow = TextOverflow.Ellipsis)
-                    Text(text =buildAnnotatedString {
-                        pushStringAnnotation(tag = "article", annotation = article.url?:"Newsapi.org")
-                        withStyle(style = SpanStyle(color = colorResource(id = R.color.hyper_link_color))) {
-                            append("Read Full Article Here")
-                        }
-                        pop()
-                    })
+                    Text(
+                        text = article.title ?: "Not Available",
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = article.description ?: "Not Available",
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Card(
+                        backgroundColor = colorResource(id = R.color.white),
+                        elevation = 6.dp,
+                    ) {
+                        Text(text = buildAnnotatedString {
+                            pushStringAnnotation(
+                                tag = "article",
+                                annotation = article.url ?: "Newsapi.org"
+                            )
+                            withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_500))) {
+                                append("Read Full Article Here")
+                            }
+                            pop()
+                        }, modifier = Modifier.padding(8.dp))
+                    }
                 }
             }
         }}}
