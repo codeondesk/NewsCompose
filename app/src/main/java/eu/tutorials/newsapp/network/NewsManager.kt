@@ -40,6 +40,8 @@ class NewsManager {
         getArticles()
     }
 
+    val query = mutableStateOf("")
+
     private fun getArticles(){
         val service = Api.retrofitService.getTopArticles("us")
         service.enqueue(object : Callback<TopNewsResponse> {

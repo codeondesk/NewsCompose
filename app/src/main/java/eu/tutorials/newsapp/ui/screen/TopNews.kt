@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,12 +21,13 @@ import com.skydoves.landscapist.coil.CoilImage
 import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.components.SearchBar
 import eu.tutorials.newsapp.network.models.TopNewsArticle
 
 @Composable
-fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
+fun TopNews(navController: NavController,articles:List<TopNewsArticle>,query: MutableState<String>) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
-      Text(text = "Top News",fontWeight = FontWeight.SemiBold)
+      SearchBar(query = query)
             LazyColumn {
                 items(articles.size) { index ->
                     TopNewsItem(article = articles[index],

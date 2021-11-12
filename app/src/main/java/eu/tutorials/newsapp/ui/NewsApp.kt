@@ -61,7 +61,7 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
 fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>,
 newsManager: NewsManager) {
     composable(BottomMenuScreen.TopNews.route) {
-        TopNews(navController = navController,articles)
+        TopNews(navController = navController,articles,newsManager.query)
     }
     composable(BottomMenuScreen.Categories.route) {
         newsManager.getArticlesByCategory("business")
