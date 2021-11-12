@@ -6,11 +6,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NewsService {
+//Todo 4: Remove the key from the interface parameter
+    @GET("top-headlines")
+    fun getTopArticles(@Query("country") country:String): Call<TopNewsResponse>
 
     @GET("top-headlines")
-    fun getTopArticles(@Query("country") country:String, @Query("apiKey")apiKey:String): Call<TopNewsResponse>
-
-    //Todo 3: create get method for getting articles by category
-    @GET("top-headlines")
-    fun getArticlesByCategories(@Query("category") category:String,@Query("apiKey")apiKey: String):Call<TopNewsResponse>
+    fun getArticlesByCategories(@Query("category") category:String):Call<TopNewsResponse>
 }

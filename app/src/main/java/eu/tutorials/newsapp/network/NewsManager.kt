@@ -18,7 +18,6 @@ class NewsManager {
             _newsResponse
         }
 
-    //Todo 3: we create a setter  and getter to hold the value from the article by category
     private val _getArticleByCategory =
         mutableStateOf(TopNewsResponse())
     val getArticleByCategory:MutableState<TopNewsResponse>
@@ -32,8 +31,9 @@ class NewsManager {
         getArticles()
     }
 
+    //Todo 5: remove the api key
     private fun getArticles(){
-        val service = Api.retrofitService.getTopArticles("us","0068ac69d80f4a97b794fa26311cb323")
+        val service = Api.retrofitService.getTopArticles("us")
         service.enqueue(object : Callback<TopNewsResponse> {
             override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
                 if (response.isSuccessful){
@@ -51,9 +51,8 @@ class NewsManager {
         })
     }
 
-    //Todo 5: We create a method to process the request and set the response if its successful
     fun getArticlesByCategory(category: String){
-        val client = Api.retrofitService.getArticlesByCategories(category,"0068ac69d80f4a97b794fa26311cb323")
+        val client = Api.retrofitService.getArticlesByCategories(category)
         client.enqueue(object :Callback<TopNewsResponse>{
             override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
                 if (response.isSuccessful){

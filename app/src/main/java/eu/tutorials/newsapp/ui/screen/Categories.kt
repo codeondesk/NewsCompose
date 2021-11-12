@@ -69,7 +69,6 @@ fun CategoryTab(category: String,
     }
 }
 
-//TOdo 1: create the Article content composable
 @Composable
 fun ArticleContent(articles: List<TopNewsArticle>,modifier:Modifier = Modifier) {
     LazyColumn{
@@ -96,7 +95,6 @@ fun ArticleContent(articles: List<TopNewsArticle>,modifier:Modifier = Modifier) 
     }
 }
 
-//Todo 2: Add a Preview for Article content
 @Preview
 @Composable
 fun ArticleContentPreview() {

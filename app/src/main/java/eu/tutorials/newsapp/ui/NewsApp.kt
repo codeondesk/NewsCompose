@@ -64,12 +64,10 @@ newsManager: NewsManager) {
         TopNews(navController = navController,articles)
     }
     composable(BottomMenuScreen.Categories.route) {
-        //Todo 7: set business as default category
         newsManager.getArticlesByCategory("business")
         newsManager.onSelectedCategoryChanged("business")
         Categories(newsManager = newsManager,onFetchCategory = {
             newsManager.onSelectedCategoryChanged(it)
-            //Todo 6: call getArticlesByCategory
         newsManager.getArticlesByCategory(it)
         })
     }
