@@ -24,21 +24,20 @@ class NewsManager {
             _getArticleByCategory
         }
 
+    //Todo 2: create a variable to keep track of the sourceName
+    val sourceName = mutableStateOf("abc-news")
     val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
 
     init {
         getArticles()
     }
 
-    //Todo 5: remove the api key
     private fun getArticles(){
         val service = Api.retrofitService.getTopArticles("us")
         service.enqueue(object : Callback<TopNewsResponse> {
             override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
                 if (response.isSuccessful){
                     _newsResponse.value = response.body()!!
-                }else{
-
                 }
             }
 
@@ -55,8 +54,6 @@ class NewsManager {
             override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
                 if (response.isSuccessful){
                     _getArticleByCategory.value = response.body()!!
-                }else{
-
                 }
             }
 

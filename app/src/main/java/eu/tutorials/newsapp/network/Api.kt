@@ -17,11 +17,10 @@ object Api {
         .build()
 
 
-    //Todo 6 : create a loggin variable
-    val logging = HttpLoggingInterceptor()
+    private val logging = HttpLoggingInterceptor()
 
-    //Todo 2: setup Okhttp client with a the api key in the header
-    val httpClient = OkHttpClient.Builder().apply {
+
+    private val httpClient = OkHttpClient.Builder().apply {
         addInterceptor(
             Interceptor{chain->
            val builder = chain.request().newBuilder()
@@ -29,14 +28,13 @@ object Api {
                return@Interceptor chain.proceed(builder.build())
             }
         )
-        //Todo 7: set up the log to show even the body of the response
+
         logging.level = HttpLoggingInterceptor.Level.BODY
         addNetworkInterceptor(logging)
 
     }.build()
 
 
-    //Todo 3: add httpclient to the retrofit
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)

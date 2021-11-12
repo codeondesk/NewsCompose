@@ -72,6 +72,6 @@ newsManager: NewsManager) {
         })
     }
     composable(BottomMenuScreen.Sources.route) {
-        Sources()
+        Sources(newsManager = newsManager)
     }
 }
