@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -15,6 +16,10 @@ object Api {
         .add(KotlinJsonAdapterFactory())
         .build()
 
+
+    //Todo 6 : create a loggin variable
+    val logging = HttpLoggingInterceptor()
+
     //Todo 2: setup Okhttp client with a the api key in the header
     val httpClient = OkHttpClient.Builder().apply {
         addInterceptor(
@@ -24,8 +29,12 @@ object Api {
                return@Interceptor chain.proceed(builder.build())
             }
         )
+        //Todo 7: set up the log to show even the body of the response
+        logging.level = HttpLoggingInterceptor.Level.BODY
+        addNetworkInterceptor(logging)
 
     }.build()
+
 
     //Todo 3: add httpclient to the retrofit
     private val retrofit = Retrofit.Builder()
