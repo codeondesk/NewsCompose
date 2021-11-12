@@ -26,7 +26,15 @@ class NewsManager {
 
     //Todo 2: create a variable to keep track of the sourceName
     val sourceName = mutableStateOf("abc-news")
-    val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
+
+    //Todo 6: create a variable to hold articles by source
+    private val _getArticleBySource =  mutableStateOf(TopNewsResponse())
+    val getArticleBySource :MutableState<TopNewsResponse>
+        @Composable get() = remember {
+            _getArticleBySource
+        }
+            val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
+
 
     init {
         getArticles()
@@ -66,5 +74,22 @@ class NewsManager {
     fun onSelectedCategoryChanged(category:String){
         val newCategory = getArticleCategory(category = category)
         selectedCategory.value = newCategory
+    }
+
+    //Todo 7:process request for articles by source and set to
+    fun getArticleBySource(){
+        val client = Api.retrofitService.getArticlesBySouurces(sourceName.value)
+        client.enqueue(object :Callback<TopNewsResponse>{
+            override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
+                if (response.isSuccessful){
+                    _getArticleBySource.value = response.body()!!
+                }
+            }
+
+            override fun onFailure(call: Call<TopNewsResponse>, t: Throwable) {
+
+            }
+
+        })
     }
 }
