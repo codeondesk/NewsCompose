@@ -22,16 +22,13 @@ import eu.tutorials.newsapp.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.network.models.TopNewsArticle
 
-//Todo 4: create TopNewsArticle list variable and replace the list in items with the size instead
 @Composable
 fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
       Text(text = "Top News",fontWeight = FontWeight.SemiBold)
        LazyColumn{
             items(articles.size){index->
-                //Todo 5: update newsData with article from each index
                 TopNewsItem(article =articles[index],
-                    //Todo 11 :we pass in index when a news item is clicked
                 onNewsClick = {  navController.navigate("Detail/$index")}
                     )
             }
@@ -39,7 +36,6 @@ fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
     }
 }
 
-//Todo 2 update NewsData with TopNewsArticle and replace Image with CoilImage
 @Composable
 fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
     Box(modifier = Modifier
@@ -64,7 +60,6 @@ fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(100.dp))
-            //Todo 8: add maxline ellipsis when there is an overflow
             Text(text = article.title!!, color = Color.White, fontWeight = FontWeight.SemiBold,
             maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -72,7 +67,6 @@ fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
         }}
 }
 
-//Todo 3:Update preview to use TopNewsItem and remove id
 @Preview(showBackground = true)
 @Composable
 fun TopNewsPreview() {

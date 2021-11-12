@@ -35,12 +35,10 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
     Scaffold(bottomBar ={
         BottomMenu(navController = navController)
     }) {
-        //Todo 10: use the padding value from scaffold as a value in NavHost
         Navigation(navController =navController , scrollState =scrollState,paddingValues = it )
     }
 }
 
-//Todo 9: create a padding value variable and pass into NavHost modifier
 @Composable
 fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager(),paddingValues: PaddingValues) {
 
@@ -48,9 +46,7 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
     Log.d("newss","$articles")
     articles?.let {
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
-        //Todo 7:pass articles to bottomNavigation
         bottomNavigation(navController = navController, articles)
-        //Todo 12: replace the key with index and get article by selected index
         composable("Detail/{index}",
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType }
@@ -65,7 +61,7 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
     }
 }
 
-//Todo 6: create TopNews list and provide the value to TopNews composable
+
 fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNews(navController = navController,articles)

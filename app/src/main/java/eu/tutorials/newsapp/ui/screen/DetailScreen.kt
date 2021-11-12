@@ -28,10 +28,6 @@ import eu.tutorials.newsapp.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.network.models.TopNewsArticle
 
-/**Todo 13: replace newsData with topNewsArticle and also replace the element values with data from it
- * Replace Image with CoilImage
- * For each Text we use elvis operator ?: to set the the value if its not null else set Not Available
- */
 @Composable
 fun DetailScreen(article: TopNewsArticle, scrollState: ScrollState,navController: NavController) {
     Scaffold(topBar = {
@@ -92,7 +88,6 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
     }
 }
 
-//Todo 14: replace the preview data with TopNewsArticle
 @Preview(showBackground = true)
 @Composable
 fun DetailScreenPreview() {
