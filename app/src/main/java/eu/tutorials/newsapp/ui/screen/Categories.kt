@@ -14,17 +14,24 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.model.getAllArticleCategory
+import eu.tutorials.newsapp.network.NewsManager
 
 //Todo 5: update the Categories screen to display the category tab
+/**Todo 9: Create a newsManager variable,set isSelected value
+ * to selectedCategory value from newsManager == category
+ *
+ */
 @Composable
-fun Categories(onFetchCategory:(String)->Unit={}) {
+fun Categories(onFetchCategory:(String)->Unit={},newsManager: NewsManager) {
     val tabsItems = getAllArticleCategory()
     Column {
         LazyRow() {
             items(tabsItems.size) {
                 val category = tabsItems[it]
                 CategoryTab(
-                    category = category.categoryName, onFetchCategory = onFetchCategory
+                    category = category.categoryName, onFetchCategory = onFetchCategory,
+                    isSelected =
+                    newsManager.selectedCategory.value == category
                 )
             }
         }

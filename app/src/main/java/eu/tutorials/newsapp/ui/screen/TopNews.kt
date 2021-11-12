@@ -26,12 +26,12 @@ import eu.tutorials.newsapp.network.models.TopNewsArticle
 fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
       Text(text = "Top News",fontWeight = FontWeight.SemiBold)
-       LazyColumn{
-            items(articles.size){index->
-                TopNewsItem(article =articles[index],
-                onNewsClick = {  navController.navigate("Detail/$index")}
+            LazyColumn {
+                items(articles.size) { index ->
+                    TopNewsItem(article = articles[index],
+                        onNewsClick = { navController.navigate("Detail/$index") }
                     )
-            }
+                }
         }
     }
 }
@@ -40,8 +40,9 @@ fun TopNews(navController: NavController,articles:List<TopNewsArticle>) {
 fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
     Box(modifier = Modifier
         .height(200.dp)
-        .padding(8.dp).clickable {
-          onNewsClick()
+        .padding(8.dp)
+        .clickable {
+            onNewsClick()
         }) {
         CoilImage(
             imageModel = article.urlToImage,
@@ -55,12 +56,12 @@ fun TopNewsItem(article: TopNewsArticle,onNewsClick: () -> Unit = {},) {
             .wrapContentHeight()
             .padding(top = 16.dp, start = 16.dp),verticalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = MockData.stringToDate(article.publishedAt!!).getTimeAgo(),
+                text = MockData.stringToDate(article.publishedAt?:"2021-11-10T14:25:20Z").getTimeAgo(),
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(100.dp))
-            Text(text = article.title!!, color = Color.White, fontWeight = FontWeight.SemiBold,
+            Text(text = article.title?:"Not Available", color = Color.White, fontWeight = FontWeight.SemiBold,
             maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

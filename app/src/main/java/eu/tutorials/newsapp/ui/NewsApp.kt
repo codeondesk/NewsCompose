@@ -40,12 +40,12 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState) {
 
 @Composable
 fun Navigation(navController:NavHostController,scrollState: ScrollState,newsManager: NewsManager= NewsManager(),paddingValues: PaddingValues) {
-
-    val articles = newsManager.newsResponse.value.articles
+    val articles = mutableListOf(TopNewsArticle())
+    articles.addAll(newsManager.newsResponse.value.articles ?: listOf(TopNewsArticle()))
     Log.d("newss","$articles")
-    articles?.let {
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
-        bottomNavigation(navController = navController, articles)
+        //Todo 10: pass in newsManager value
+        bottomNavigation(navController = navController, articles,newsManager)
         composable("Detail/{index}",
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType }
@@ -57,16 +57,19 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
             }
         }
     }
-    }
 }
 
-
-fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>) {
+/**Todo 10: create the newsManager variable, pass in the value to Categories and call onSelectedCategoryChanged
+ * in onFetchedCategory block and pass in the emitted string.
+ *
+  */
+fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>,
+newsManager: NewsManager) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNews(navController = navController,articles)
     }
     composable(BottomMenuScreen.Categories.route) {
-        Categories()
+        Categories(newsManager = newsManager,onFetchCategory = {newsManager.onSelectedCategoryChanged(it)})
     }
     composable(BottomMenuScreen.Sources.route) {
         Sources()
