@@ -18,7 +18,14 @@ class NewsManager {
             _newsResponse
         }
 
-    //Todo 6: create a variable to keep track of the selected category
+    //Todo 3: we create a setter  and getter to hold the value from the article by category
+    private val _getArticleByCategory =
+        mutableStateOf(TopNewsResponse())
+    val getArticleByCategory:MutableState<TopNewsResponse>
+        @Composable get() = remember {
+            _getArticleByCategory
+        }
+
     val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
 
     init {
@@ -44,7 +51,25 @@ class NewsManager {
         })
     }
 
-    //Todo 7: created a method to filter the selected category using its name and pass into the tracking value
+    //Todo 5: We create a method to process the request and set the response if its successful
+    fun getArticlesByCategory(category: String){
+        val client = Api.retrofitService.getArticlesByCategories(category,"0068ac69d80f4a97b794fa26311cb323")
+        client.enqueue(object :Callback<TopNewsResponse>{
+            override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
+                if (response.isSuccessful){
+                    _getArticleByCategory.value = response.body()!!
+                    Log.d("carte","${_getArticleByCategory.value}")
+                }else{
+                    Log.d("carte","${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<TopNewsResponse>, t: Throwable) {
+                Log.d("searcherror","${t.printStackTrace()}")
+            }
+
+        })
+    }
     fun onSelectedCategoryChanged(category:String){
         val newCategory = getArticleCategory(category = category)
         selectedCategory.value = newCategory
