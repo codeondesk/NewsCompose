@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import eu.tutorials.newsapp.BottomMenuScreen
-import eu.tutorials.newsapp.MockData
 import eu.tutorials.newsapp.components.BottomMenu
 import eu.tutorials.newsapp.network.NewsManager
 import eu.tutorials.newsapp.network.models.TopNewsArticle

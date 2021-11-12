@@ -1,8 +1,9 @@
-package eu.tutorials.newsapp
+package eu.tutorials.newsapp.model
 
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.util.Log
+import eu.tutorials.newsapp.R
 import java.util.*
 
 object MockData {

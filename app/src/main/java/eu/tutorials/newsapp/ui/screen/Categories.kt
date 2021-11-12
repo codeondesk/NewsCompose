@@ -1,7 +1,9 @@
 package eu.tutorials.newsapp.ui.screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -11,10 +13,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.model.getAllArticleCategory
 
+//Todo 5: update the Categories screen to display the category tab
 @Composable
-fun Categories() {
-    Text(text = "Categories Screen")
+fun Categories(onFetchCategory:(String)->Unit={}) {
+    val tabsItems = getAllArticleCategory()
+    Column {
+        LazyRow() {
+            items(tabsItems.size) {
+                val category = tabsItems[it]
+                CategoryTab(
+                    category = category.categoryName, onFetchCategory = onFetchCategory
+                )
+            }
+        }
+     }
 }
 
 /**Todo 1: create categories tab with 3 parameters

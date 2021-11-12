@@ -17,8 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.coil.CoilImage
-import eu.tutorials.newsapp.MockData
-import eu.tutorials.newsapp.MockData.getTimeAgo
+import eu.tutorials.newsapp.model.MockData
+import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.network.models.TopNewsArticle
 
