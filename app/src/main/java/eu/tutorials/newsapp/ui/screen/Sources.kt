@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +42,7 @@ fun Sources(newsManager: NewsManager) {
       "TheVerge" to "verge"
     )
     Scaffold(topBar={
-        //TOdo 3: Paa in TopAppBar, set the title to the source name and add drop down as an actions
+        //Todo 3: Pass in TopAppBar, set the title to the source name and add drop down as an actions
     TopAppBar(
         title = {
             Text(text = "${newsManager.sourceName.value} Source")
@@ -73,17 +76,30 @@ fun Sources(newsManager: NewsManager) {
 
         newsManager.getArticleBySource()
         val article = newsManager.getArticleBySource.value
-        //Todo 9: Add the Content composable and pass in articles by source
+        //Todo 13: Add the Content composable and pass in articles by source
         SourceContent(articles = article.articles?: listOf() )
 
 }
 }
 
-//Todo 8: Create a composable to displace the articles
+//Todo 8: Create a composable to display the articles
 @Composable
 fun SourceContent(articles:List<TopNewsArticle>) {
+    //Todo 10: create a Uri Handler
+    val uriHandler = LocalUriHandler.current
     LazyColumn{
         items(articles) { article ->
+            //Todo 9 create an annotated string for the articles full URL
+            val annotatedString = buildAnnotatedString {
+                pushStringAnnotation(
+                    tag = "URL",
+                    annotation = article.url ?: "newsapi.org"
+                )
+                withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_500),textDecoration = TextDecoration.Underline)) {
+                    append("Read Full Article Here")
+                }
+                pop()
+            }
             Card(backgroundColor = colorResource(id = R.color.purple_700),elevation = 6.dp, modifier = Modifier.padding(8.dp)) {
                 Column(modifier = Modifier
                     .height(200.dp)
@@ -99,25 +115,30 @@ fun SourceContent(articles:List<TopNewsArticle>) {
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
+                    /**Todo 11 we use a card to set hyperlink for the url to the full article
+                     * We use a ClickbaleText instead of Text so we can set an action for when its clicked
+                     * Pass in the annotated string as text and get its result as a url then open with the uri handler
+                     */
                     Card(
                         backgroundColor = colorResource(id = R.color.white),
                         elevation = 6.dp,
                     ) {
-                        Text(text = buildAnnotatedString {
-                            pushStringAnnotation(
-                                tag = "article",
-                                annotation = article.url ?: "Newsapi.org"
-                            )
-                            withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_500))) {
-                                append("Read Full Article Here")
-                            }
-                            pop()
-                        }, modifier = Modifier.padding(8.dp))
+                        ClickableText(text = annotatedString,
+                      modifier = Modifier.padding(8.dp),
+                            onClick = {
+                                annotatedString.getStringAnnotations(it,it).firstOrNull()
+                                    ?.let { result ->
+                                        if (result.tag == "URL") {
+                                            uriHandler.openUri(result.item)
+                                        }
+                                    }
+                            })
                     }
                 }
             }
         }}}
 
+//Todo 12: create preview for source content
 @Preview(showBackground = true)
 @Composable
 fun SourceContentPreview() {
