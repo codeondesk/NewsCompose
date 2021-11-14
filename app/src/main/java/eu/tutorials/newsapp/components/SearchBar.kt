@@ -1,5 +1,6 @@
 package eu.tutorials.newsapp.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,12 +13,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -28,7 +31,6 @@ fun SearchBar(query: MutableState<String>) {
         .fillMaxWidth()
         .padding(8.dp),
         backgroundColor = MaterialTheme.colors.primary) {
-        Row {
             TextField(value = query.value, onValueChange = {
             query.value  = it
             }, modifier = Modifier
@@ -69,6 +71,13 @@ fun SearchBar(query: MutableState<String>) {
                 ),
                 colors = TextFieldDefaults.textFieldColors(textColor = White)
             )
-        }
     }
+}
+
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+fun SearchBarPreview() {
+    SearchBar(query = mutableStateOf(""))
 }
