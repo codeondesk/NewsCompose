@@ -38,6 +38,7 @@ class NewsManager {
         getArticles()
     }
 
+    //Todo 5: create a query variable for the searched word
     val query = mutableStateOf("")
 
     private fun getArticles(){

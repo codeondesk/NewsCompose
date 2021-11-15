@@ -24,10 +24,12 @@ import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.components.SearchBar
 import eu.tutorials.newsapp.network.models.TopNewsArticle
 
+//Todo 3 create a query variable as a parameter
 @Composable
 fun TopNews(navController: NavController,articles:List<TopNewsArticle>,query: MutableState<String>) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
-      SearchBar(query = query)
+      //Todo 4: replace Text tile with the SearchBar and pass in query as argument
+        SearchBar(query = query)
             LazyColumn {
                 items(articles.size) { index ->
                     TopNewsItem(article = articles[index],

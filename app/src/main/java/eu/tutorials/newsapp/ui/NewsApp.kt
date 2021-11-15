@@ -61,6 +61,7 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
 fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>,
 newsManager: NewsManager) {
     composable(BottomMenuScreen.TopNews.route) {
+        //Todo 6: set the query value from newsmanager as an argument
         TopNews(navController = navController,articles,newsManager.query)
     }
     composable(BottomMenuScreen.Categories.route) {

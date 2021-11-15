@@ -24,6 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**Todo 1: create SearchBar composable with a Card and TextField, customizing
+ * its keyboard to show the Search icon as the action button
+ * Create  @param [query] to keep track of hte query word and get the value
+ * from the TextField
+ *
+  */
 @Composable
 fun SearchBar(query: MutableState<String>) {
     val localFocusManager = LocalFocusManager.current
@@ -75,6 +81,7 @@ fun SearchBar(query: MutableState<String>) {
 }
 
 
+//Todo 2: create a preview function for the SearchBar
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
