@@ -51,6 +51,14 @@ fun Navigation(navController:NavHostController,scrollState: ScrollState,newsMana
             )) { navBackStackEntry ->
             val index = navBackStackEntry.arguments?.getInt("index")
             index?.let {
+                //Todo 16 update the news detail article to include the search response
+                if (newsManager.query.value.isNotEmpty()) {
+                    articles.clear()
+                    articles.addAll(newsManager.searchedNewsResponse.value.articles?: listOf())
+                }else{
+                    articles.clear()
+                    articles.addAll(newsManager.newsResponse.value.articles?: listOf())
+                }
                 val article = articles[index]
                 DetailScreen(article, scrollState, navController)
             }
@@ -62,8 +70,9 @@ fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<
 newsManager: NewsManager) {
     composable(BottomMenuScreen.TopNews.route) {
         //Todo 6: set the query value from newsmanager as an argument
-        TopNews(navController = navController,articles,newsManager.query)
-    }
+        //Todo 15 pass in newsManager value to TopNews
+        TopNews(navController = navController,articles,newsManager.query,newsManager = newsManager)
+        }
     composable(BottomMenuScreen.Categories.route) {
         newsManager.getArticlesByCategory("business")
         newsManager.onSelectedCategoryChanged("business")

@@ -14,5 +14,9 @@ interface NewsService {
     fun getArticlesByCategories(@Query("category") category:String):Call<TopNewsResponse>
 
     @GET("everything")
-    fun getArticlesBySouurces(@Query("sources") source:String):Call<TopNewsResponse>
+    fun getArticlesBySources(@Query("sources") source:String):Call<TopNewsResponse>
+
+    //Todo 7: create search request interface
+    @GET("everything")
+    fun searchArticles(@Query("q") country:String):Call<TopNewsResponse>
 }

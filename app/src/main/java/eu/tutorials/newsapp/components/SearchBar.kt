@@ -23,15 +23,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.tutorials.newsapp.network.NewsManager
 
 /**Todo 1: create SearchBar composable with a Card and TextField, customizing
  * its keyboard to show the Search icon as the action button
  * Create  @param [query] to keep track of hte query word and get the value
  * from the TextField
- *
+ * Todo 10 create newsManager variable
   */
 @Composable
-fun SearchBar(query: MutableState<String>) {
+fun SearchBar(query: MutableState<String>,newsManager: NewsManager) {
     val localFocusManager = LocalFocusManager.current
     Card(elevation = 6.dp,shape = RoundedCornerShape(4.dp),modifier = Modifier
         .fillMaxWidth()
@@ -70,7 +71,8 @@ fun SearchBar(query: MutableState<String>) {
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         if (query.value != "") {
-
+                            //Todo 11: call getSearchArticles when search action is clicked
+                       newsManager.getSearchedArticles(query.value)
                         }
                         localFocusManager.clearFocus()
                     }
@@ -86,5 +88,6 @@ fun SearchBar(query: MutableState<String>) {
 @Preview(showBackground = true)
 @Composable
 fun SearchBarPreview() {
-    SearchBar(query = mutableStateOf(""))
+    //Todo 12:pass in NewsManager for preview
+    SearchBar(query = mutableStateOf(""),NewsManager())
 }
