@@ -8,5 +8,5 @@ class Repository(val manager: NewsManager) {
     //Todo 6: create methods and return getArticles and getArticlesByCategory
     suspend fun getArticles() = manager.getArticles("us")
 
-    suspend fun getArticleByCategory(country:String) = manager.getArticlesByCategory(country)
+    suspend fun getArticleByCategory(category:String) = manager.getArticlesByCategory(category)
 }

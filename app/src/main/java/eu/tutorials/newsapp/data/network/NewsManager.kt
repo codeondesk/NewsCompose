@@ -23,12 +23,6 @@ class NewsManager(private val service: NewsService) {
         service.getArticlesByCategories(category)
     }
 
-    private val _getArticleByCategory =
-        mutableStateOf(TopNewsResponse())
-    val getArticleByCategory:State<TopNewsResponse>
-        @Composable get() = remember {
-            _getArticleByCategory
-        }
 
     val sourceName = mutableStateOf("abc-news")
 
@@ -37,9 +31,6 @@ class NewsManager(private val service: NewsService) {
         @Composable get() = remember {
             _getArticleBySource
         }
-            val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
-
-
 
     val query = mutableStateOf("")
 
@@ -50,11 +41,6 @@ class NewsManager(private val service: NewsService) {
         @Composable get() = remember {
             _searchedNewsResponse
         }
-
-    fun onSelectedCategoryChanged(category:String){
-        val newCategory = getArticleCategory(category = category)
-        selectedCategory.value = newCategory
-    }
 
     fun getArticleBySource(){
         val client = Api.retrofitService.getArticlesBySources(sourceName.value)

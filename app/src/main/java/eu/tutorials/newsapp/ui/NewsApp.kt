@@ -50,7 +50,7 @@ fun Navigation(navController:NavHostController, scrollState: ScrollState, newsMa
     val topArticles = viewModel.newsResponse.collectAsState().value.articles
     articles.addAll(topArticles ?: listOf())
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
-        bottomNavigation(navController = navController, articles,newsManager)
+        bottomNavigation(navController = navController, articles,newsManager,viewModel = viewModel)
         composable("Detail/{index}",
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType }
@@ -71,19 +71,22 @@ fun Navigation(navController:NavHostController, scrollState: ScrollState, newsMa
     }
 }
 
+//Todo 31: create MainViewModel parameter
 fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>,
-newsManager: NewsManager
+newsManager: NewsManager,viewModel: MainViewModel
 ) {
     composable(BottomMenuScreen.TopNews.route) {
        TopNews(navController = navController,articles,newsManager.query,newsManager = newsManager)
         }
     composable(BottomMenuScreen.Categories.route) {
         //Todo 16: comment out getArticlesByCategory
-        //newsManager.getArticlesByCategory("business")
-        newsManager.onSelectedCategoryChanged("business")
-        Categories(newsManager = newsManager,onFetchCategory = {
-            newsManager.onSelectedCategoryChanged(it)
-        //newsManager.getArticlesByCategory(it)
+        //Todo 32:getArticles and selectedCategory from viewModel
+        viewModel.getArticlesByCategory("business")
+        viewModel.onSelectedCategoryChanged("business")
+        //Todo 33 replace newsManager with mainViewModel
+        Categories(viewModel = viewModel,onFetchCategory = {
+            viewModel.onSelectedCategoryChanged(it)
+        viewModel.getArticlesByCategory(it)
         })
     }
     composable(BottomMenuScreen.Sources.route) {

@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -26,22 +27,26 @@ import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.model.getAllArticleCategory
 import eu.tutorials.newsapp.data.network.NewsManager
 import eu.tutorials.newsapp.data.models.TopNewsArticle
+import eu.tutorials.newsapp.ui.MainViewModel
 
+//Todo 28: replace NewsManager MainViewModel parameter
 @Composable
-fun Categories(onFetchCategory:(String)->Unit={},newsManager: NewsManager) {
+fun Categories(onFetchCategory:(String)->Unit={},viewModel: MainViewModel) {
     val tabsItems = getAllArticleCategory()
     Column {
-        LazyRow() {
+        LazyRow{
             items(tabsItems.size) {
                 val category = tabsItems[it]
                 CategoryTab(
                     category = category.categoryName, onFetchCategory = onFetchCategory,
+                    //Todo 29 collect the selectedCategory from viewmodel
                     isSelected =
-                    newsManager.selectedCategory.value == category
+                    viewModel.selectedCategory.collectAsState().value == category
                 )
             }
         }
-        ArticleContent(articles = newsManager.getArticleByCategory.value.articles ?: listOf())
+        //Todo 30 collect the getArticleByCategory from viewModel
+        ArticleContent(articles = viewModel.getArticleByCategory.collectAsState().value.articles ?: listOf())
      }
 }
 
