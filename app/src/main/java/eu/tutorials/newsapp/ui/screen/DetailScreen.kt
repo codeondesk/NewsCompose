@@ -26,7 +26,7 @@ import com.skydoves.landscapist.coil.CoilImage
 import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
-import eu.tutorials.newsapp.network.models.TopNewsArticle
+import eu.tutorials.newsapp.data.models.TopNewsArticle
 
 @Composable
 fun DetailScreen(article: TopNewsArticle, scrollState: ScrollState,navController: NavController) {

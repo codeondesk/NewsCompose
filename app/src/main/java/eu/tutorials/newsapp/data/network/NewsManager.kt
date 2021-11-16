@@ -1,22 +1,27 @@
-package eu.tutorials.newsapp.network
+package eu.tutorials.newsapp.data.network
 
 import android.util.Log
 import androidx.compose.runtime.*
 import eu.tutorials.newsapp.model.ArticleCategory
 import eu.tutorials.newsapp.model.getArticleCategory
-import eu.tutorials.newsapp.network.models.TopNewsResponse
+import eu.tutorials.newsapp.data.models.TopNewsResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NewsManager {
+//Todo 3: create news service as a parameter
+class NewsManager(private val service: NewsService) {
 
-    private val _newsResponse =
-        mutableStateOf(TopNewsResponse())
-    val newsResponse: State<TopNewsResponse>
-        @Composable get() = remember {
-            _newsResponse
-        }
+    //Todo 4: replace topNews and categories request and process with coroutine IO dispatcher
+    suspend fun getArticles(country:String):TopNewsResponse = withContext(Dispatchers.IO){
+        service.getTopArticles(country)
+    }
+
+    suspend fun getArticlesByCategory(category: String):TopNewsResponse= withContext(Dispatchers.IO){
+        service.getArticlesByCategories(category)
+    }
 
     private val _getArticleByCategory =
         mutableStateOf(TopNewsResponse())
@@ -35,14 +40,10 @@ class NewsManager {
             val selectedCategory: MutableState<ArticleCategory?> = mutableStateOf(null)
 
 
-    init {
-        getArticles()
-    }
 
-    //Todo 5: create a query variable for the searched word
     val query = mutableStateOf("")
 
-    //todo 8: create setter and getter
+
     private val _searchedNewsResponse =
         mutableStateOf(TopNewsResponse())
     val searchedNewsResponse:State<TopNewsResponse>
@@ -50,37 +51,6 @@ class NewsManager {
             _searchedNewsResponse
         }
 
-    private fun getArticles(){
-        val service = Api.retrofitService.getTopArticles("us")
-        service.enqueue(object : Callback<TopNewsResponse> {
-            override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
-                if (response.isSuccessful){
-                    _newsResponse.value = response.body()!!
-                }
-            }
-
-            override fun onFailure(call: Call<TopNewsResponse>, t: Throwable) {
-
-            }
-
-        })
-    }
-
-    fun getArticlesByCategory(category: String){
-        val client = Api.retrofitService.getArticlesByCategories(category)
-        client.enqueue(object :Callback<TopNewsResponse>{
-            override fun onResponse(call: Call<TopNewsResponse>, response: Response<TopNewsResponse>) {
-                if (response.isSuccessful){
-                    _getArticleByCategory.value = response.body()!!
-                }
-            }
-
-            override fun onFailure(call: Call<TopNewsResponse>, t: Throwable) {
-
-            }
-
-        })
-    }
     fun onSelectedCategoryChanged(category:String){
         val newCategory = getArticleCategory(category = category)
         selectedCategory.value = newCategory
@@ -102,7 +72,6 @@ class NewsManager {
         })
     }
 
-    //Todo 9:process the search request and set response to the value holder
     fun getSearchedArticles(query: String){
         val client = Api.retrofitService.searchArticles(query)
         client.enqueue(object :Callback<TopNewsResponse>{

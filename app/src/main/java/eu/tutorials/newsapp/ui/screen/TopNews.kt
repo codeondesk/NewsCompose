@@ -22,19 +22,15 @@ import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.components.SearchBar
-import eu.tutorials.newsapp.network.NewsManager
-import eu.tutorials.newsapp.network.models.TopNewsArticle
+import eu.tutorials.newsapp.data.network.NewsManager
+import eu.tutorials.newsapp.data.models.TopNewsArticle
 
-//Todo 3 create a query variable as a parameter
-//todo 13 create newsmanager variable and pass in as argument to SearchBar
 @Composable
 fun TopNews(navController: NavController,articles:List<TopNewsArticle>,query: MutableState<String>,
-            newsManager: NewsManager) {
+            newsManager: NewsManager
+) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
-      //Todo 4: replace Text tile with the SearchBar and pass in query as argument
-        SearchBar(query = query,newsManager)
-        //Todo 14: create a new resultlist variable and check if there is a search word and the search result is not null and add to the list
-        //else add the article from top news and set to the items and TopNewsItem
+      SearchBar(query = query,newsManager)
         val searchedText = query.value
         val resultList = mutableListOf<TopNewsArticle>()
         if (searchedText != "") {

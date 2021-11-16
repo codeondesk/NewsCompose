@@ -1,4 +1,4 @@
-package eu.tutorials.newsapp.network.models
+package eu.tutorials.newsapp.data.models
 
 
 data class TopNewsArticle(

@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!--Todo 10: Add the MainApp as android name-->
     <application
+        android:name=".MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

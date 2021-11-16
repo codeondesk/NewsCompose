@@ -24,8 +24,8 @@ import eu.tutorials.newsapp.R
 import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.model.getAllArticleCategory
-import eu.tutorials.newsapp.network.NewsManager
-import eu.tutorials.newsapp.network.models.TopNewsArticle
+import eu.tutorials.newsapp.data.network.NewsManager
+import eu.tutorials.newsapp.data.models.TopNewsArticle
 
 @Composable
 fun Categories(onFetchCategory:(String)->Unit={},newsManager: NewsManager) {

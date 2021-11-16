@@ -1,4 +1,4 @@
-package eu.tutorials.newsapp.network
+package eu.tutorials.newsapp.data.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

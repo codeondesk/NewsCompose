@@ -24,8 +24,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.tutorials.newsapp.R
-import eu.tutorials.newsapp.network.NewsManager
-import eu.tutorials.newsapp.network.models.TopNewsArticle
+import eu.tutorials.newsapp.data.network.NewsManager
+import eu.tutorials.newsapp.data.models.TopNewsArticle
 
 
 @Composable
