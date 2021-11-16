@@ -8,18 +8,16 @@ import retrofit2.http.Query
 
 interface NewsService {
 
-    //Todo 1 Replace retrofit call with coroutine
     @GET("top-headlines")
     suspend fun getTopArticles(@Query("country") country:String): TopNewsResponse
 
-    //Todo 2: Replace retrofit call with coroutine
     @GET("top-headlines")
     suspend fun getArticlesByCategories(@Query("category") category:String):TopNewsResponse
 
+    //Todo 1: replace Retrofit call with coroutine
     @GET("everything")
-    fun getArticlesBySources(@Query("sources") source:String):Call<TopNewsResponse>
-
+    suspend fun getArticlesBySources(@Query("sources") source:String):TopNewsResponse
 
     @GET("everything")
-    fun searchArticles(@Query("q") country:String):Call<TopNewsResponse>
+    suspend fun searchArticles(@Query("q") country:String):TopNewsResponse
 }

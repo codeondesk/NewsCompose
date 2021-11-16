@@ -29,7 +29,6 @@ import eu.tutorials.newsapp.data.network.NewsManager
 import eu.tutorials.newsapp.data.models.TopNewsArticle
 import eu.tutorials.newsapp.ui.MainViewModel
 
-//Todo 28: replace NewsManager MainViewModel parameter
 @Composable
 fun Categories(onFetchCategory:(String)->Unit={},viewModel: MainViewModel) {
     val tabsItems = getAllArticleCategory()
@@ -39,13 +38,13 @@ fun Categories(onFetchCategory:(String)->Unit={},viewModel: MainViewModel) {
                 val category = tabsItems[it]
                 CategoryTab(
                     category = category.categoryName, onFetchCategory = onFetchCategory,
-                    //Todo 29 collect the selectedCategory from viewmodel
+
                     isSelected =
                     viewModel.selectedCategory.collectAsState().value == category
                 )
             }
         }
-        //Todo 30 collect the getArticleByCategory from viewModel
+
         ArticleContent(articles = viewModel.getArticleByCategory.collectAsState().value.articles ?: listOf())
      }
 }

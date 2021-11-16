@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -22,7 +24,6 @@ import eu.tutorials.newsapp.ui.screen.DetailScreen
 import eu.tutorials.newsapp.ui.screen.Sources
 import eu.tutorials.newsapp.ui.screen.TopNews
 
-//Todo 19: create MainViewModel as parameter and pass into mainScreen
 @Composable
 fun NewsApp(mainViewModel: MainViewModel) {
     val scrollState = rememberScrollState()
@@ -30,7 +31,7 @@ fun NewsApp(mainViewModel: MainViewModel) {
 
     MainScreen(navController = navController,scrollState,mainViewModel)
 }
- //Todo 18 create MainViewModel as parameter and pass to Navigation
+
 @Composable
 fun MainScreen(navController: NavHostController,scrollState: ScrollState,mainViewModel: MainViewModel) {
     Scaffold(bottomBar ={
@@ -40,26 +41,23 @@ fun MainScreen(navController: NavHostController,scrollState: ScrollState,mainVie
     }
 }
 
-/**Todo 17: create MainViewModel as a parameter and collect newsResponse as state
- * get the topArticles and assign to  anew variable and then add to articles
- * */
 @Composable
-fun Navigation(navController:NavHostController, scrollState: ScrollState, newsManager: NewsManager = NewsManager(
-    Api.retrofitService), paddingValues: PaddingValues, viewModel: MainViewModel) {
+fun Navigation(navController:NavHostController, scrollState: ScrollState, paddingValues: PaddingValues, viewModel: MainViewModel) {
     val articles = mutableListOf(TopNewsArticle())
     val topArticles = viewModel.newsResponse.collectAsState().value.articles
     articles.addAll(topArticles ?: listOf())
     NavHost(navController = navController, startDestination =BottomMenuScreen.TopNews.route,modifier = Modifier.padding(paddingValues)) {
-        bottomNavigation(navController = navController, articles,newsManager,viewModel = viewModel)
+        bottomNavigation(navController = navController, articles,viewModel = viewModel)
         composable("Detail/{index}",
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType }
             )) { navBackStackEntry ->
             val index = navBackStackEntry.arguments?.getInt("index")
             index?.let {
-                if (newsManager.query.value.isNotEmpty()) {
+                if (viewModel.query.value.isNotEmpty()) {
                     articles.clear()
-                    articles.addAll(newsManager.searchedNewsResponse.value.articles?: listOf())
+                    //Todo 20 collect searchedNewsResponse from viewModel
+                    articles.addAll(viewModel.searchedNewsResponse.value.articles?: listOf())
                 }else{
                     articles.clear()
                     articles.addAll(topArticles?: listOf())
@@ -71,25 +69,25 @@ fun Navigation(navController:NavHostController, scrollState: ScrollState, newsMa
     }
 }
 
-//Todo 31: create MainViewModel parameter
-fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>,
-newsManager: NewsManager,viewModel: MainViewModel
+fun NavGraphBuilder.bottomNavigation(navController: NavController,articles:List<TopNewsArticle>, viewModel: MainViewModel
 ) {
     composable(BottomMenuScreen.TopNews.route) {
-       TopNews(navController = navController,articles,newsManager.query,newsManager = newsManager)
+        val queryState = remember {
+            mutableStateOf(viewModel.query.value)
+        }
+        //Todo 19: replace newsManager with viewModel
+       TopNews(navController = navController,articles,queryState,viewModel = viewModel)
         }
     composable(BottomMenuScreen.Categories.route) {
-        //Todo 16: comment out getArticlesByCategory
-        //Todo 32:getArticles and selectedCategory from viewModel
         viewModel.getArticlesByCategory("business")
         viewModel.onSelectedCategoryChanged("business")
-        //Todo 33 replace newsManager with mainViewModel
         Categories(viewModel = viewModel,onFetchCategory = {
             viewModel.onSelectedCategoryChanged(it)
         viewModel.getArticlesByCategory(it)
         })
     }
     composable(BottomMenuScreen.Sources.route) {
-        Sources(newsManager = newsManager)
+        //Todo 13: pass in viewmodel as argument
+        Sources(viewModel = viewModel)
     }
 }

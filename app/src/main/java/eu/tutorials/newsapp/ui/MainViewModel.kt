@@ -1,6 +1,10 @@
 package eu.tutorials.newsapp.ui
 
 import android.app.Application
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import eu.tutorials.newsapp.MainApp
@@ -12,26 +16,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-//Todo 11: create the application class and extend AndroidViewmodel
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    //Todo 12: get repository from the MainApp
     private val repository = getApplication<MainApp>().repository
 
-    //Todo 13: create a setter and getter for the newsReponse
     private val _newsResponse = MutableStateFlow(TopNewsResponse())
     val newsResponse: StateFlow<TopNewsResponse>
     get() = _newsResponse
 
-    //Todo 14: create a variable to keep track of the loading state
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    /** Todo 15: create a method to launch getArticles
-     * set the loading value to true before launch and to false
-     * after the coroutine
-     *
-      */
     fun getTopArticles(){
         _isLoading.value  = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,18 +35,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.value = false
     }
 
-    //Todo 26: create a setter and getter for selectedCategory tab
     private val _selectedCategory:MutableStateFlow<ArticleCategory?> = MutableStateFlow(null)
        val  selectedCategory:StateFlow<ArticleCategory?>
         get() = _selectedCategory
 
-    //Todo 24: move the setter and getter for Article by Category from NewsManager and use MutableStateFlow
     private val _getArticleByCategory =
         MutableStateFlow(TopNewsResponse())
     val getArticleByCategory: StateFlow<TopNewsResponse>
        get() = _getArticleByCategory
 
-    //Todo 25: create a method and launch the getArticleByCategory
     fun getArticlesByCategory(category:String){
         _isLoading.value  = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,10 +52,49 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.value = false
     }
 
-    //Todo 27: move the method for changing the category from NewsManager
     fun onSelectedCategoryChanged(category:String){
         val newCategory = getArticleCategory(category = category)
         _selectedCategory.value = newCategory
     }
 
+
+    //Todo 4: create a holder for sourceName with setter and getter for article by sources
+    //start
+    val sourceName = MutableStateFlow("engadget")
+
+    private val _getArticleBySource =  MutableStateFlow(TopNewsResponse())
+    val getArticleBySource : StateFlow<TopNewsResponse>
+       get() = _getArticleBySource
+    //end
+
+    //Todo 5: create a query string to keep track of search word then a setter and getter for searched articles
+    //start
+    val query = MutableStateFlow("")
+
+    private val _searchedNewsResponse =
+        MutableStateFlow(TopNewsResponse())
+    val searchedNewsResponse: StateFlow<TopNewsResponse>
+        get() = _searchedNewsResponse
+   //end
+
+    //Todo 6: create a method to launch getArticlesBySource and set response to its setter
+    fun getArticleBySource(){
+        _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            _getArticleBySource.value = repository.getArticlesBySource(sourceName.value)
+        }
+        _isLoading.value = true
+    }
+
+    /**Todo 7: create a method to launch getSearchedArticle for @param [query]
+     *  and set response to its setter
+     */
+
+    fun getSearchedArticles(query:String){
+        _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            _searchedNewsResponse.value = repository.getSearchedArticles(query)
+        }
+        _isLoading.value = true
+    }
 }

@@ -1,9 +1,6 @@
 package eu.tutorials.newsapp.ui.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,25 +21,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.tutorials.newsapp.R
-import eu.tutorials.newsapp.data.network.NewsManager
 import eu.tutorials.newsapp.data.models.TopNewsArticle
+import eu.tutorials.newsapp.ui.MainViewModel
 
 
+//TOdo 8: replace newsManager with MainViewmodel
 @Composable
-fun Sources(newsManager: NewsManager) {
+fun Sources(viewModel: MainViewModel) {
     val items = listOf(
        "TechCrunch" to "techcrunch",
         "TalkSport" to "talksport",
-        "SABQ" to "sabq",
+        "Business Insider" to "business-insider",
        "Reuters" to "reuters",
         "Politico" to "politico",
-      "TheVerge" to "verge"
+      "TheVerge" to "the-verge"
     )
     Scaffold(topBar={
 
         TopAppBar(
         title = {
-            Text(text = "${newsManager.sourceName.value} Source")
+            //Todo 9: collect the value from sourceName an set as toolbar title
+            Text(text = "${viewModel.sourceName.collectAsState().value} Source")
         },
         actions = {
 
@@ -60,7 +59,9 @@ fun Sources(newsManager: NewsManager) {
                 ) {
                     items.forEach {
                         DropdownMenuItem(onClick = {
-                            newsManager.sourceName.value = it.second
+                            //Todo 11: on menu item selected set selected as sourceName and fetch articles
+                            viewModel.sourceName.value = it.second
+                            viewModel.getArticleBySource()
                             menuExpanded = false
                         }) {
                             Text(it.first)
@@ -71,10 +72,12 @@ fun Sources(newsManager: NewsManager) {
         }
     )}){
 
-        newsManager.getArticleBySource()
-        val article = newsManager.getArticleBySource.value
+        //Todo 12: On first screen launch fetch article from default source
+        viewModel.getArticleBySource()
+        //Todo 13: collect article by source and pass as source content
+        val article = viewModel.getArticleBySource.collectAsState().value
 
-        SourceContent(articles = article.articles?: listOf() )
+        SourceContent(articles = article.articles ?: listOf() )
 
 }
 }
@@ -96,7 +99,7 @@ fun SourceContent(articles:List<TopNewsArticle>) {
                 }
                 pop()
             }
-            Card(backgroundColor = colorResource(id = R.color.purple_700),elevation = 6.dp, modifier = Modifier.padding(8.dp)) {
+            Card(backgroundColor = colorResource(id = R.color.purple_700),elevation = 6.dp, modifier = Modifier.fillMaxWidth().padding(8.dp)) {
                 Column(modifier = Modifier
                     .height(200.dp)
                     .padding(end = 8.dp, start = 8.dp),verticalArrangement = Arrangement.SpaceEvenly) {

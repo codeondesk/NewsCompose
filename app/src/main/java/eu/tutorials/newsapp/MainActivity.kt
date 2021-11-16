@@ -16,17 +16,17 @@ import eu.tutorials.newsapp.ui.NewsApp
 import eu.tutorials.newsapp.ui.theme.NewsAppTheme
 
 class MainActivity : ComponentActivity() {
-    //Todo 20: initialize the viewModel
+
     private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Todo 21 call getTopArticles method
+
         viewModel.getTopArticles()
         setContent {
             NewsAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    //Todo 22: pass in viewModel to NewsApp
+
                     NewsApp(viewModel)
                 }
             }
@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//Todo 23: provide default viewModel to the preview
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
