@@ -21,128 +21,153 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.components.ErrorUI
+import eu.tutorials.newsapp.components.LoadingUI
 import eu.tutorials.newsapp.data.models.TopNewsArticle
 import eu.tutorials.newsapp.ui.MainViewModel
 
-
-//TOdo 8: replace newsManager with MainViewmodel
+//Todo 15: create the loading and error state parameters
 @Composable
-fun Sources(viewModel: MainViewModel) {
+fun Sources(viewModel: MainViewModel,isLoading:MutableState<Boolean>,isError:MutableState<Boolean>) {
     val items = listOf(
-       "TechCrunch" to "techcrunch",
+        "TechCrunch" to "techcrunch",
         "TalkSport" to "talksport",
         "Business Insider" to "business-insider",
-       "Reuters" to "reuters",
+        "Reuters" to "reuters",
         "Politico" to "politico",
-      "TheVerge" to "the-verge"
+        "TheVerge" to "the-verge"
     )
-    Scaffold(topBar={
+    Scaffold(topBar = {
 
         TopAppBar(
-        title = {
-            //Todo 9: collect the value from sourceName an set as toolbar title
-            Text(text = "${viewModel.sourceName.collectAsState().value} Source")
-        },
-        actions = {
+            title = {
+                Text(text = "${viewModel.sourceName.collectAsState().value} Source")
+            },
+            actions = {
 
-            var menuExpanded by remember { mutableStateOf(false) }
+                var menuExpanded by remember { mutableStateOf(false) }
 
-            IconButton(onClick = { menuExpanded = true }) {
-                Icon(Icons.Default.MoreVert, contentDescription = null)
-            }
-            MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
-                DropdownMenu(
-                    expanded = menuExpanded,
-                    onDismissRequest = {
-                        menuExpanded = false
-                    },
-                ) {
-                    items.forEach {
-                        DropdownMenuItem(onClick = {
-                            //Todo 11: on menu item selected set selected as sourceName and fetch articles
-                            viewModel.sourceName.value = it.second
-                            viewModel.getArticleBySource()
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = null)
+                }
+                MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = {
                             menuExpanded = false
-                        }) {
-                            Text(it.first)
+                        },
+                    ) {
+                        items.forEach {
+                            DropdownMenuItem(onClick = {
+                                viewModel.sourceName.value = it.second
+                                viewModel.getArticleBySource()
+                                menuExpanded = false
+                            }) {
+                                Text(it.first)
+                            }
+                        }
+                    }
+                }
+            }
+        )
+    }) {
+//Todo 15: if state is loading show the loadingui, if there is an error show the errorui,
+//if request is successful get the returned article and pass to SourceContent
+        when {
+            isLoading.value -> {
+                LoadingUI()
+            }
+            isError.value -> {
+                ErrorUI()
+            }
+            else -> {
+                viewModel.getArticleBySource()
+                val article = viewModel.getArticleBySource.collectAsState().value
+                SourceContent(articles = article.articles ?: listOf())
+            }
+
+        }
+    }
+}
+
+    @Composable
+    fun SourceContent(articles: List<TopNewsArticle>) {
+
+        val uriHandler = LocalUriHandler.current
+        LazyColumn {
+            items(articles) { article ->
+
+                val annotatedString = buildAnnotatedString {
+                    pushStringAnnotation(
+                        tag = "URL",
+                        annotation = article.url ?: "newsapi.org"
+                    )
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorResource(id = R.color.purple_500),
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append("Read Full Article Here")
+                    }
+                    pop()
+                }
+                Card(
+                    backgroundColor = colorResource(id = R.color.purple_700),
+                    elevation = 6.dp,
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .height(200.dp)
+                            .padding(end = 8.dp, start = 8.dp),
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            text = article.title ?: "Not Available",
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = article.description ?: "Not Available",
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Card(
+                            backgroundColor = colorResource(id = R.color.white),
+                            elevation = 6.dp,
+                        ) {
+                            ClickableText(text = annotatedString,
+                                modifier = Modifier.padding(8.dp),
+                                onClick = {
+                                    annotatedString.getStringAnnotations(it, it).firstOrNull()
+                                        ?.let { result ->
+                                            if (result.tag == "URL") {
+                                                uriHandler.openUri(result.item)
+                                            }
+                                        }
+                                })
                         }
                     }
                 }
             }
         }
-    )}){
-
-        //Todo 12: On first screen launch fetch article from default source
-        viewModel.getArticleBySource()
-        //Todo 13: collect article by source and pass as source content
-        val article = viewModel.getArticleBySource.collectAsState().value
-
-        SourceContent(articles = article.articles ?: listOf() )
-
-}
-}
-
-@Composable
-fun SourceContent(articles:List<TopNewsArticle>) {
-
-    val uriHandler = LocalUriHandler.current
-    LazyColumn{
-        items(articles) { article ->
-
-            val annotatedString = buildAnnotatedString {
-                pushStringAnnotation(
-                    tag = "URL",
-                    annotation = article.url ?: "newsapi.org"
-                )
-                withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_500),textDecoration = TextDecoration.Underline)) {
-                    append("Read Full Article Here")
-                }
-                pop()
-            }
-            Card(backgroundColor = colorResource(id = R.color.purple_700),elevation = 6.dp, modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                Column(modifier = Modifier
-                    .height(200.dp)
-                    .padding(end = 8.dp, start = 8.dp),verticalArrangement = Arrangement.SpaceEvenly) {
-                    Text(
-                        text = article.title ?: "Not Available",
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = article.description ?: "Not Available",
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Card(
-                        backgroundColor = colorResource(id = R.color.white),
-                        elevation = 6.dp,
-                    ) {
-                        ClickableText(text = annotatedString,
-                      modifier = Modifier.padding(8.dp),
-                            onClick = {
-                                annotatedString.getStringAnnotations(it,it).firstOrNull()
-                                    ?.let { result ->
-                                        if (result.tag == "URL") {
-                                            uriHandler.openUri(result.item)
-                                        }
-                                    }
-                            })
-                    }
-                }
-            }
-        }}}
+    }
 
 @Preview(showBackground = true)
 @Composable
 fun SourceContentPreview() {
-    SourceContent(articles = listOf(TopNewsArticle(
-        author = "Namita Singh",
-        title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
-        description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",
-        publishedAt = "2021-11-04T04:42:40Z"
-    )
+    SourceContent(
+        articles = listOf(
+            TopNewsArticle(
+                author = "Namita Singh",
+                title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
+                description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",
+                publishedAt = "2021-11-04T04:42:40Z"
+            )
 
-    ))
+        )
+    )
 }

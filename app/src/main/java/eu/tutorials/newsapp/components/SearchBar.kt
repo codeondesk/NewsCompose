@@ -27,7 +27,6 @@ import eu.tutorials.newsapp.data.network.Api
 import eu.tutorials.newsapp.data.network.NewsManager
 import eu.tutorials.newsapp.ui.MainViewModel
 
-//Todo 14: replace newsManager with MainViewModel
 @Composable
 fun SearchBar(query: MutableState<String>,viewModel: MainViewModel) {
     val localFocusManager = LocalFocusManager.current
@@ -68,7 +67,6 @@ fun SearchBar(query: MutableState<String>,viewModel: MainViewModel) {
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         if (query.value != "") {
-                            //Todo 15: getSearched article from viewModel
                             viewModel.getSearchedArticles(query.value)
                         }
                         localFocusManager.clearFocus()

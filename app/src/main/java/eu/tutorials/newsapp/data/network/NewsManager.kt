@@ -14,7 +14,6 @@ class NewsManager(private val service: NewsService) {
         service.getArticlesByCategories(category)
     }
 
-    //Todo 2: update getArticleBySource and getSearchedArticles to use coroutine
    suspend fun getArticleBySource(source:String):TopNewsResponse= withContext(Dispatchers.IO){
         service.getArticlesBySources(source)
     }

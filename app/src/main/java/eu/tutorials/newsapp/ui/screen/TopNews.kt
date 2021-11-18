@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,35 +20,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.skydoves.landscapist.coil.CoilImage
+import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.components.ErrorUI
+import eu.tutorials.newsapp.components.LoadingUI
+import eu.tutorials.newsapp.components.SearchBar
+import eu.tutorials.newsapp.data.models.TopNewsArticle
 import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
-import eu.tutorials.newsapp.R
-import eu.tutorials.newsapp.components.SearchBar
-import eu.tutorials.newsapp.data.network.NewsManager
-import eu.tutorials.newsapp.data.models.TopNewsArticle
 import eu.tutorials.newsapp.ui.MainViewModel
-//Todo 16: replace newsManager with ViewModel
+
+//Todo 7: create the loading and error state as parameter
 @Composable
 fun TopNews(navController: NavController,articles:List<TopNewsArticle>,query: MutableState<String>,
-           viewModel: MainViewModel
+           viewModel: MainViewModel,isLoading:MutableState<Boolean>,isError:MutableState<Boolean>
 ) {
     Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally) {
-     //Todo 17: pass in viewmodel as SearchBar argument
       SearchBar(query = query,viewModel = viewModel)
         val searchedText = query.value
         val resultList = mutableListOf<TopNewsArticle>()
         if (searchedText != "") {
-            //Todo 18:collect searchedNewsResponse from viwModel
             resultList.addAll(viewModel.searchedNewsResponse.collectAsState().value.articles?: articles)
         }else{
             resultList.addAll(articles)
         }
-            LazyColumn {
-                items(resultList.size) { index ->
-                    TopNewsItem(article = resultList[index],
-                        onNewsClick = { navController.navigate("Detail/$index") }
-                    )
+        //Todo 8: if state is loading show the loadingui, if there is an error show the errorui,
+        // if article response is returned show lazy column and set the article
+        when{
+            isLoading.value->{
+                LoadingUI()
+            }
+            isError.value->{
+                ErrorUI()
+            }
+            else->{
+                LazyColumn {
+                    items(resultList.size) { index ->
+                        TopNewsItem(article = resultList[index],
+                            onNewsClick = { navController.navigate("Detail/$index") }
+                        )
+                    }
                 }
+            }
         }
     }
 }

@@ -1,20 +1,21 @@
 package eu.tutorials.newsapp.ui
 
+import android.accounts.NetworkErrorException
 import android.app.Application
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import eu.tutorials.newsapp.MainApp
 import eu.tutorials.newsapp.data.models.TopNewsResponse
 import eu.tutorials.newsapp.model.ArticleCategory
 import eu.tutorials.newsapp.model.getArticleCategory
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.internal.http2.ErrorCode
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,79 +23,84 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _newsResponse = MutableStateFlow(TopNewsResponse())
     val newsResponse: StateFlow<TopNewsResponse>
-    get() = _newsResponse
+        get() = _newsResponse
 
-    private val _isLoading = MutableStateFlow(true)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    fun getTopArticles(){
-        _isLoading.value  = true
-        viewModelScope.launch(Dispatchers.IO) {
-            _newsResponse.value = repository.getArticles()
+    //Todo 2: create the error state variable setter and getter
+    private val _isError = MutableStateFlow(false)
+    val isError: StateFlow<Boolean>
+        get() = _isError
+
+    //Todo 3: create a coroutine exception handler and set isError to true
+
+    val errorHandler = CoroutineExceptionHandler { _, error ->
+        if (error is Exception) {
+            _isError.value = true
         }
-        _isLoading.value = false
     }
 
-    private val _selectedCategory:MutableStateFlow<ArticleCategory?> = MutableStateFlow(null)
-       val  selectedCategory:StateFlow<ArticleCategory?>
+
+    fun getTopArticles() {
+        _isLoading.value = true
+        //Todo 4 Since we are using coroutine for processing the request. coroutine exception handler is attached to the dispatcher
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            _newsResponse.value = repository.getArticles()
+            _isLoading.value = false
+        }
+    }
+
+    private val _selectedCategory: MutableStateFlow<ArticleCategory?> = MutableStateFlow(null)
+    val selectedCategory: StateFlow<ArticleCategory?>
         get() = _selectedCategory
 
     private val _getArticleByCategory =
         MutableStateFlow(TopNewsResponse())
     val getArticleByCategory: StateFlow<TopNewsResponse>
-       get() = _getArticleByCategory
+        get() = _getArticleByCategory
 
-    fun getArticlesByCategory(category:String){
-        _isLoading.value  = true
-        viewModelScope.launch(Dispatchers.IO) {
-            _getArticleByCategory.value = repository.getArticleByCategory(category =category )
+    fun getArticlesByCategory(category: String) {
+        _isLoading.value = true
+        //Todo 5 Since we are using coroutine for processing the request. coroutine exception handler is attached to the dispatcher
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            _getArticleByCategory.value = repository.getArticleByCategory(category = category)
+            _isLoading.value = false
         }
-        _isLoading.value = false
+
     }
 
-    fun onSelectedCategoryChanged(category:String){
+    fun onSelectedCategoryChanged(category: String) {
         val newCategory = getArticleCategory(category = category)
         _selectedCategory.value = newCategory
     }
 
 
-    //Todo 4: create a holder for sourceName with setter and getter for article by sources
-    //start
     val sourceName = MutableStateFlow("engadget")
 
-    private val _getArticleBySource =  MutableStateFlow(TopNewsResponse())
-    val getArticleBySource : StateFlow<TopNewsResponse>
-       get() = _getArticleBySource
-    //end
+    private val _getArticleBySource = MutableStateFlow(TopNewsResponse())
+    val getArticleBySource: StateFlow<TopNewsResponse>
+        get() = _getArticleBySource
 
-    //Todo 5: create a query string to keep track of search word then a setter and getter for searched articles
-    //start
     val query = MutableStateFlow("")
 
     private val _searchedNewsResponse =
         MutableStateFlow(TopNewsResponse())
     val searchedNewsResponse: StateFlow<TopNewsResponse>
         get() = _searchedNewsResponse
-   //end
 
-    //Todo 6: create a method to launch getArticlesBySource and set response to its setter
-    fun getArticleBySource(){
+    fun getArticleBySource() {
         _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
+        //Todo 6 Since we are using coroutine for processing the request. coroutine exception handler is attached to the dispatcher
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
             _getArticleBySource.value = repository.getArticlesBySource(sourceName.value)
+            _isLoading.value = false
         }
-        _isLoading.value = true
     }
 
-    /**Todo 7: create a method to launch getSearchedArticle for @param [query]
-     *  and set response to its setter
-     */
-
-    fun getSearchedArticles(query:String){
-        _isLoading.value = true
+    fun getSearchedArticles(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _searchedNewsResponse.value = repository.getSearchedArticles(query)
         }
-        _isLoading.value = true
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil.CoilImage
 import eu.tutorials.newsapp.R
+import eu.tutorials.newsapp.components.ErrorUI
+import eu.tutorials.newsapp.components.LoadingUI
 import eu.tutorials.newsapp.model.MockData
 import eu.tutorials.newsapp.model.MockData.getTimeAgo
 import eu.tutorials.newsapp.model.getAllArticleCategory
@@ -29,24 +32,42 @@ import eu.tutorials.newsapp.data.network.NewsManager
 import eu.tutorials.newsapp.data.models.TopNewsArticle
 import eu.tutorials.newsapp.ui.MainViewModel
 
+//Todo 17: create the loading and error state parameters
 @Composable
-fun Categories(onFetchCategory:(String)->Unit={},viewModel: MainViewModel) {
+fun Categories(onFetchCategory:(String)->Unit={}, viewModel: MainViewModel, isLoading: MutableState<Boolean>, isError: MutableState<Boolean>) {
     val tabsItems = getAllArticleCategory()
     Column {
-        LazyRow{
-            items(tabsItems.size) {
-                val category = tabsItems[it]
-                CategoryTab(
-                    category = category.categoryName, onFetchCategory = onFetchCategory,
+        //Todo 15: if state is loading show the loadingui, if there is an error show the errorui,
+    //if request is successful get the returned article and pass to ArticleContent
 
-                    isSelected =
-                    viewModel.selectedCategory.collectAsState().value == category
-                )
+        when {
+            isLoading.value -> {
+                LoadingUI()
+            }
+            isError.value -> {
+                ErrorUI()
+            }
+            else -> {
+                LazyRow {
+                    items(tabsItems.size) {
+                        val category = tabsItems[it]
+                        CategoryTab(
+                            category = category.categoryName, onFetchCategory = onFetchCategory,
+
+                            isSelected =
+                            viewModel.selectedCategory.collectAsState().value == category
+                        )
+                    }
+                }
             }
         }
+                ArticleContent(
+                    articles = viewModel.getArticleByCategory.collectAsState().value.articles
+                        ?: listOf()
+                )
 
-        ArticleContent(articles = viewModel.getArticleByCategory.collectAsState().value.articles ?: listOf())
-     }
+
+    }
 }
 
 @Composable
