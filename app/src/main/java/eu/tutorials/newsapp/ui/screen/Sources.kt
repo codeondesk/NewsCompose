@@ -34,12 +34,12 @@ import eu.tutorials.newsapp.network.models.TopNewsArticle
 @Composable
 fun Sources(newsManager: NewsManager) {
     val items = listOf(
-       "TechCrunch" to "techcrunch",
+        "TechCrunch" to "techcrunch",
         "TalkSport" to "talksport",
-        "SABQ" to "sabq",
-       "Reuters" to "reuters",
+        "Business Insider" to "business-insider",
+        "Reuters" to "reuters",
         "Politico" to "politico",
-      "TheVerge" to "verge"
+        "TheVerge" to "the-verge"
     )
     Scaffold(topBar={
         //Todo 3: Pass in TopAppBar, set the title to the source name and add drop down as an actions
