@@ -41,6 +41,7 @@ fun Categories(onFetchCategory:(String)->Unit={},newsManager: NewsManager) {
                 )
             }
         }
+        //Todo 8: Add in the ArticleContent and pass in getArticleByCategory from newsManager
         ArticleContent(articles = newsManager.getArticleByCategory.value.articles ?: listOf())
      }
 }
